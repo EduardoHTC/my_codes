@@ -10,7 +10,7 @@
 #definicao dos pesos de cada variavel -> a soma dos pesos deve ser = 1
 vikor_w = c(0.7,0.3)
 bnfts = c('+','-')
-#peso VIKOR (valor entre 0 e 1) -> 0.5 é bom (confia)
+#peso VIKOR (valor entre 0 e 1) -> 0.5 Ã© bom (confia)
 #v = (nrow(vikor_data)+1)/(nrow(vikor_data)*2)
 v = 0.5
 data_file = NSGA_results
@@ -82,29 +82,30 @@ Qi_final_results = rbind(Qi,rank(Qi))
 Qi_final_results = t(Qi_final_results)
 
 #Solution conditions
-# DQ = 1/(nrow(vikor_data)-1)
-# closeness = vector(length = nrow(Qi_final_results)) 
-# for (i in 1:nrow(Qi_final_results)){
-#   closeness[i] = Qi_final_results[i,1]-Qi_final_results[which(Qi_final_results[,2]==1),1]
-# }
-# closeness = t(rbind(closeness,rank(closeness)))
-# #C1 = acceptable advantage | C2 = stability | C3 = closeness
-# for (i in 1:nrow(Qi_final_results)){
-#   if (Qi_final_results[which(Qi_final_results[,2]==2),1]-Qi_final_results[which(Qi_final_results[,2]==1),1]>=DQ & Si[i] == min(Si) & Ri[i] == min(Ri)){ 
-#     #solution = vikor_data[which(Qi_final_results[,2]==1),]
-#     solution = which(Qi_final_results[,2]==1)
-#   } else if(Qi_final_results[which(Qi_final_results[,2]==2),1]-Qi_final_results[which(Qi_final_results[,2]==1),1]<DQ & Si[i] == min(Si) & Ri[i] == min(Ri)){
-#     solution = c(which(Qi_final_results[,2]==1, Qi_final_results[,2]==2))
-#     } else{
-#     solution = which(closeness<DQ)
-#   }
-# }
+DQ = 1/(nrow(vikor_data)-1)
+closeness = vector(length = nrow(Qi_final_results)) 
+for (i in 1:nrow(Qi_final_results)){
+ closeness[i] = Qi_final_results[i,1]-Qi_final_results[which(Qi_final_results[,2]==1),1]
+}
+closeness = t(rbind(closeness,rank(closeness)))
+#C1 = acceptable advantage | C2 = stability | C3 = closeness
+for (i in 1:nrow(Qi_final_results)){
+ if (Qi_final_results[which(Qi_final_results[,2]==2),1]-Qi_final_results[which(Qi_final_results[,2]==1),1]>=DQ & Si[i] == min(Si) & Ri[i] == min(Ri)){ 
+   #solution = vikor_data[which(Qi_final_results[,2]==1),]
+   solution = which.min(Qi_final_results)
+ } else if(Qi_final_results[which(Qi_final_results[,2]==2),1]-Qi_final_results[which(Qi_final_results[,2]==1),1]<DQ & Si[i] == min(Si) & Ri[i] == min(Ri)){
+   solution = c(which(Qi_final_results[,2]==1, Qi_final_results[,2]==2))
+   } else{
+   solution = which(closeness<DQ)
+ }
+}
 # #mostrar resultados
-# DP = vector(length = length(solution))
-# for (i in 1:length(solution)){
-#   DP[i] = vikor_data[solution[i],2]/vikor_data[solution[i],1]
-# }
-# print(DP)
+DP = vector(length = length(solution))
+for (i in 1:length(solution)){
+ DP[i] = vikor_data[solution[i],2]/vikor_data[solution[i],1]
+}
+print(DP)
+
 solution = which.min(Qi_final_results)
 print(data_file[solution,])
 
